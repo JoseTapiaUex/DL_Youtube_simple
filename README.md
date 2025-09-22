@@ -1,15 +1,18 @@
-# Descargador de Videos de YouTube
+# Descargador de Videos y Playlists de YouTube
 
-Un programa sencillo en Python para descargar videos de YouTube a una carpeta local.
+Un programa sencillo en Python para descargar videos individuales y playlists completas de YouTube a una carpeta local.
 
 ## Características
 
-- ✅ Solicita la URL de YouTube al usuario
+- ✅ Solicita la URL de YouTube al usuario (video o playlist)
+- ✅ **NUEVO:** Soporte para descarga de playlists completas
+- ✅ **NUEVO:** Detección automática de tipo de contenido
 - ✅ Descarga videos en la carpeta `download` del repositorio local
 - ✅ La carpeta `download` está excluida del control de versiones (`.gitignore`)
 - ✅ Interfaz de línea de comandos amigable
 - ✅ Validación de URLs de YouTube
 - ✅ Soporte para múltiples descargas en una sesión
+- ✅ Organización automática de playlists en subcarpetas
 
 ## Instalación
 
@@ -34,27 +37,55 @@ El programa te pedirá:
 3. Descargará el video en esa carpeta
 4. Te preguntará si quieres descargar otro video
 
-## Ejemplo de uso
+## Ejemplos de uso
 
+### Descarga de video individual
 ```
-🎬 DESCARGADOR DE VIDEOS DE YOUTUBE
+🎬 DESCARGADOR DE VIDEOS Y PLAYLISTS DE YOUTUBE
 ==================================================
 📁 Carpeta de descarga: D:\Users\ISX100\Documents\GitHub\DL_Youtube_simple\download
 
 ------------------------------
-🔗 Ingresa la URL del video de YouTube: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+🔗 Ingresa la URL de YouTube (video o playlist): https://www.youtube.com/watch?v=dQw4w9WgXcQ
 
+📺 Se detectó un video individual.
 Descargando video desde: https://www.youtube.com/watch?v=dQw4w9WgXcQ
 Obteniendo información del video...
-Título: Rick Astley - Never Gonna Give You Up (Official Video)
-Duración: 3:32
+📺 Título: Rick Astley - Never Gonna Give You Up (Official Video)
+👤 Autor: Rick Astley
+⏱️ Duración: 3:33
 Iniciando descarga...
-✅ Descarga completada exitosamente!
+✅ Video descargado exitosamente!
 📁 Video guardado en: D:\Users\ISX100\Documents\GitHub\DL_Youtube_simple\download
+```
 
-¿Quieres descargar otro video? (s/n): n
+### Descarga de playlist completa
+```
+🎬 DESCARGADOR DE VIDEOS Y PLAYLISTS DE YOUTUBE
+==================================================
+📁 Carpeta de descarga: D:\Users\ISX100\Documents\GitHub\DL_Youtube_simple\download
 
-👋 ¡Gracias por usar el descargador!
+------------------------------
+🔗 Ingresa la URL de YouTube (video o playlist): https://www.youtube.com/playlist?list=PLrAXtmRdnEQy6nuLMOV8u4MvX6j_7GfFg
+
+🎵 Se detectó una playlist de YouTube.
+¿Quieres descargar toda la playlist? (s/n): s
+
+Descargando playlist desde: https://www.youtube.com/playlist?list=PLrAXtmRdnEQy6nuLMOV8u4MvX6j_7GfFg
+Obteniendo información de la playlist...
+📁 Playlist: Música de los 80s
+👤 Autor: Canal Musical
+🎬 Cantidad de videos: 25
+
+📋 Primeros videos en la playlist:
+   1. Video Musical 1 (3:45)
+   2. Video Musical 2 (4:12)
+   3. Video Musical 3 (3:28)
+   ... y 22 videos más
+
+Iniciando descarga...
+✅ Playlist descargada exitosamente!
+📁 Playlist guardada en: D:\Users\ISX100\Documents\GitHub\DL_Youtube_simple\download
 ```
 
 ## Características técnicas
@@ -62,6 +93,9 @@ Iniciando descarga...
 - **Calidad**: Descarga en la mejor calidad disponible hasta 720p
 - **Formato**: MP4 (formato más compatible)
 - **Validación**: Verifica que la URL sea de YouTube antes de intentar descargar
+- **Detección inteligente**: Identifica automáticamente si la URL es un video individual o playlist
+- **Organización**: Las playlists se guardan en subcarpetas con el nombre de la playlist
+- **Numeración**: Los videos de playlist se numeran automáticamente (1 - Título, 2 - Título, etc.)
 - **Manejo de errores**: Muestra mensajes claros en caso de problemas
 
 ## Estructura del proyecto
@@ -73,6 +107,11 @@ DL_Youtube_simple/
 ├── .gitignore              # Excluye la carpeta download
 ├── README.md               # Este archivo
 └── download/               # Carpeta donde se guardan los videos (ignorada por git)
+    ├── video_individual.mp4
+    └── Nombre_Playlist/    # Subcarpeta para playlists
+        ├── 1 - Video 1.mp4
+        ├── 2 - Video 2.mp4
+        └── 3 - Video 3.mp4
 ```
 
 ## Dependencias
