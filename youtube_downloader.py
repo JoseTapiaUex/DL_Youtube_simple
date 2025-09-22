@@ -37,7 +37,7 @@ def descargar_video(url, carpeta_destino, descargar_playlist=False):
         # Configuración para yt-dlp
         if descargar_playlist:
             ydl_opts = {
-                'outtmpl': str(carpeta_destino / '%(playlist_title)s/%(playlist_index)s - %(title)s.%(ext)s'),
+                'outtmpl': str(carpeta_destino / '%(playlist_index)s - %(title)s.%(ext)s'),
                 'format': 'best[height<=720]',  # Descarga en calidad máxima hasta 720p
                 'noplaylist': False,  # Permite descargar playlists
             }

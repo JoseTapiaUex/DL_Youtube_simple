@@ -1,6 +1,6 @@
 # Descargador de Videos y Playlists de YouTube
 
-Un programa sencillo en Python para descargar videos individuales y playlists completas de YouTube a una carpeta local.
+Un programa completo en Python para descargar videos individuales y playlists completas de YouTube a una carpeta local. Incluye tanto una interfaz de línea de comandos como un servidor MCP (Model Context Protocol) para integración con sistemas de IA.
 
 ## Características
 
@@ -12,7 +12,7 @@ Un programa sencillo en Python para descargar videos individuales y playlists co
 - ✅ Interfaz de línea de comandos amigable
 - ✅ Validación de URLs de YouTube
 - ✅ Soporte para múltiples descargas en una sesión
-- ✅ Organización automática de playlists en subcarpetas
+- ✅ Numeración automática de videos de playlist en la misma carpeta
 
 ## Instalación
 
@@ -25,17 +25,54 @@ pip install -r requirements.txt
 
 ## Uso
 
-Ejecuta el programa:
+### 🖥️ Interfaz de Línea de Comandos
+
+Ejecuta el programa interactivo:
 
 ```bash
 python youtube_downloader.py
 ```
 
-El programa te pedirá:
-1. La URL del video de YouTube que quieres descargar
-2. Automáticamente creará la carpeta `download` si no existe
-3. Descargará el video en esa carpeta
-4. Te preguntará si quieres descargar otro video
+### 🚀 Servidor MCP (Model Context Protocol)
+
+Para usar el servidor MCP con sistemas de IA:
+
+```bash
+python youtube_mcp_server.py
+```
+
+El servidor MCP ofrece 6 herramientas para gestión asíncrona de descargas:
+
+| Herramienta | Descripción | Parámetros |
+|-------------|-------------|------------|
+| `download_video` | Iniciar descarga de video individual | `url`, `quality` |
+| `download_playlist` | Iniciar descarga de playlist completa | `url`, `quality` |
+| `get_download_status` | Verificar estado de descarga | `job_id` |
+| `cancel_download` | Cancelar descarga en progreso | `job_id` |
+| `list_downloads` | Listar todas las descargas | Ninguno |
+| `get_video_metadata` | Obtener metadatos sin descargar | `url` |
+
+### 📋 Ejemplo de uso del servidor MCP
+
+```python
+# Ejemplo de integración con el servidor MCP
+import requests
+
+# Iniciar descarga de video
+response = requests.post('http://localhost:8000/tools/download_video', json={
+    "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "quality": "720p"
+})
+job_id = response.json()["job_id"]
+
+# Verificar estado
+status = requests.post('http://localhost:8000/tools/get_download_status', json={
+    "job_id": job_id
+})
+
+# Listar todas las descargas
+downloads = requests.post('http://localhost:8000/tools/list_downloads')
+```
 
 ## Ejemplos de uso
 
@@ -85,7 +122,7 @@ Obteniendo información de la playlist...
 
 Iniciando descarga...
 ✅ Playlist descargada exitosamente!
-📁 Playlist guardada en: D:\Users\ISX100\Documents\GitHub\DL_Youtube_simple\download
+📁 Videos de la playlist guardados en: D:\Users\ISX100\Documents\GitHub\DL_Youtube_simple\download
 ```
 
 ## Características técnicas
@@ -94,7 +131,7 @@ Iniciando descarga...
 - **Formato**: MP4 (formato más compatible)
 - **Validación**: Verifica que la URL sea de YouTube antes de intentar descargar
 - **Detección inteligente**: Identifica automáticamente si la URL es un video individual o playlist
-- **Organización**: Las playlists se guardan en subcarpetas con el nombre de la playlist
+- **Organización**: Todos los videos se guardan en la misma carpeta `download`
 - **Numeración**: Los videos de playlist se numeran automáticamente (1 - Título, 2 - Título, etc.)
 - **Manejo de errores**: Muestra mensajes claros en caso de problemas
 
@@ -102,21 +139,40 @@ Iniciando descarga...
 
 ```
 DL_Youtube_simple/
-├── youtube_downloader.py    # Script principal
-├── requirements.txt         # Dependencias de Python
-├── .gitignore              # Excluye la carpeta download
-├── README.md               # Este archivo
-└── download/               # Carpeta donde se guardan los videos (ignorada por git)
+├── youtube_downloader.py      # Script principal (CLI)
+├── youtube_mcp_server.py      # Servidor MCP para IA
+├── requirements.txt           # Dependencias de Python
+├── .gitignore                # Excluye la carpeta download
+├── README.md                 # Este archivo
+└── download/                 # Carpeta donde se guardan todos los videos (ignorada por git)
     ├── video_individual.mp4
-    └── Nombre_Playlist/    # Subcarpeta para playlists
-        ├── 1 - Video 1.mp4
-        ├── 2 - Video 2.mp4
-        └── 3 - Video 3.mp4
+    ├── 1 - Video de playlist 1.mp4
+    ├── 2 - Video de playlist 2.mp4
+    └── 3 - Video de playlist 3.mp4
 ```
 
 ## Dependencias
 
 - `yt-dlp`: Biblioteca para descargar videos de YouTube y otros sitios de video
+- `fastmcp`: Framework para crear servidores MCP (Model Context Protocol)
+- `pydantic`: Validación de datos y modelos
+
+## Características del Servidor MCP
+
+### 🔄 Sistema de Jobs Asíncronos
+- **Estados**: Pending, Running, Completed, Failed, Cancelled
+- **Seguimiento**: Cada descarga tiene un ID único para monitoreo
+- **Progreso**: Actualización en tiempo real del estado de descarga
+
+### 🛡️ Validaciones y Seguridad
+- Validación automática de URLs de YouTube
+- Detección inteligente de videos vs playlists
+- Manejo robusto de errores y excepciones
+
+### 📊 Metadatos Completos
+- Información detallada de videos (título, autor, duración, vistas)
+- Soporte para metadatos de playlists
+- Obtención de información sin descargar
 
 ## Notas
 
@@ -124,3 +180,4 @@ DL_Youtube_simple/
 - Esta carpeta está excluida del control de versiones para evitar subir archivos grandes al repositorio
 - El programa valida que las URLs sean de YouTube antes de intentar la descarga
 - Soporta cancelación con Ctrl+C
+- El servidor MCP permite integración con sistemas de IA y automatización
